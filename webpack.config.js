@@ -40,15 +40,27 @@ let config = {
           'css-loader',
           'sass-loader'
         ]
+      },
+      {
+        test: /\.(woff(2)?|ttf|eot|svg)(\?v=\d+\.\d+\.\d+)?$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[ext]',
+              outputPath: 'assets/fonts'
+            }
+          }
+        ]
       }
     ]
   },
 
   plugins: [
     new CleanWebpackPlugin(),
-    new CopyWebpackPlugin([{ from: '../public/favicon.ico' }]),
+    new CopyWebpackPlugin([{ from: 'favicon.ico' }, { from: './assets/**/*' }]),
     new HtmlWebpackPlugin({
-      template: '../public/index.html',
+      template: 'index.html',
       removeComments: isProd,
       collapseWhitespace: isProd
     }),

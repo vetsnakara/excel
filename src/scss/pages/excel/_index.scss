@@ -1,0 +1,15 @@
+@import 'components/topbar';
+@import 'components/toolbar';
+@import 'components/formula';
+@import 'components/table';
+
+.excel {
+  height: 100%;
+  color: $excel-font-color;
+
+  &__header {
+    & > * {
+      border-bottom: 1px solid $border-color;
+    }
+  }
+}

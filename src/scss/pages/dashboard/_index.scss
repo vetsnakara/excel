@@ -1,0 +1,18 @@
+@import 'components/db';
+@import 'components/dashboard-btn';
+
+.dashboard {
+  &__title {
+    text-align: center;
+    color: $primary-color;
+  }
+
+  &__toolbar {
+    padding: 20px 40px;
+    background-color: #eee;
+  }
+
+  &__db {
+    padding: 20px 40px;
+  }
+}

@@ -1,0 +1,44 @@
+%cell {
+  padding: 2px 4px;
+  flex-shrink: 0;
+  flex-basis: $cell-init-width;
+  border-right: 1px solid $border-color;
+  border-bottom: 1px solid $border-color;
+}
+
+%info {
+  background-color: $cell-info-bg-color;
+  text-align: center;
+}
+
+.table {
+  height: 100%;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  font-size: 0.9rem;
+
+  &__row,
+  &__row-data {
+    display: flex;
+  }
+
+  &__row-info {
+    @extend %cell, %info;
+    flex-basis: $num-cell-width;
+  }
+
+  &__col-info {
+    @extend %cell, %info;
+    text-align: center;
+  }
+
+  &__cell {
+    @extend %cell;
+    color: #000;
+    border-color: rgba($border-color, 0.5);
+
+    &--selected {
+      outline: 3px solid $selected-color;
+    }
+  }
+}
