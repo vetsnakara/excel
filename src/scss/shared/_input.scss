@@ -1,0 +1,16 @@
+.input {
+  padding: 2px 7px;
+  color: #000;
+  border: 2px solid transparent;
+  border-radius: 2px;
+  font-size: 18px;
+  outline: none;
+
+  &:hover {
+    border: 2px solid $border-color;
+  }
+
+  &:focus {
+    border: 2px solid $selected-color;
+  }
+}

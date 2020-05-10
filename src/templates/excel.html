@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
+    <title>Pure JS Excel Application</title>
+  </head>
+  <body>
+    <div id="app">
+      <div class="excel">
+        <header class="excel__header">
+          <!-- Header -->
+          <div class="topbar">
+            <input type="text" class="input" value="Новая таблица" />
+            <div class="topbar__buttons">
+              <!-- remove button -->
+              <button class="button">
+                <span class="material-icons">delete</span>
+              </button>
+              <!-- exit button -->
+              <button class="button">
+                <span class="material-icons">exit_to_app</span>
+              </button>
+            </div>
+          </div>
+  
+          <!-- Toolbar -->
+          <div class="toolbar">
+            <!-- align left button -->
+            <button class="button">
+              <span class="material-icons">format_align_left</span>
+            </button>
+            <!-- align center button -->
+            <button class="button">
+              <span class="material-icons">format_align_center</span>
+            </button>
+            <!-- align right button -->
+            <button class="button">
+              <span class="material-icons">format_align_right</span>
+            </button>
+            <!-- format bold button -->
+            <button class="button">
+              <span class="material-icons">format_bold</span>
+            </button>
+            <!-- format italic button -->
+            <button class="button">
+              <span class="material-icons">format_italic</span>
+            </button>
+            <!-- format undeline button -->
+            <button class="button">
+              <span class="material-icons">format_underline</span>
+            </button>
+          </div>
+  
+          <!-- Formula -->
+          <div class="formula">
+            <div class="formula__label"><span>fx</span></div>
+            <input class="formula__input" />
+          </div>
+        </header>
+  
+        <!-- Table -->
+        <main class="table">
+          <div class="table__row">
+            <div class="table__row-info"></div>
+            <div class="table__row-data">
+              <div class="table__col-info">A</div>
+              <div class="table__col-info">B</div>
+              <div class="table__col-info">C</div>
+              <div class="table__col-info">D</div>
+              <div class="table__col-info">E</div>
+            </div>
+          </div>
+          <div class="table__row">
+            <div class="table__row-info">1</div>
+            <div class="table__row-data">
+              <div class="table__cell" contenteditable>111</div>
+              <div class="table__cell">2</div>
+              <div class="table__cell">333</div>
+              <div class="table__cell">444</div>
+              <div class="table__cell">555</div>
+            </div>
+          </div>
+          <div class="table__row">
+            <div class="table__row-info">2</div>
+            <div class="table__row-data">
+              <div class="table__cell">111</div>
+              <div class="table__cell">222</div>
+              <div class="table__cell">333</div>
+              <div class="table__cell">444</div>
+              <div class="table__cell">555</div>
+            </div>
+          </div>
+          <div class="table__row">
+            <div class="table__row-info">3</div>
+            <div class="table__row-data">
+              <div class="table__cell table__cell--selected">111</div>
+              <div class="table__cell">222</div>
+              <div class="table__cell">333</div>
+              <div class="table__cell">444</div>
+              <div class="table__cell">555</div>
+            </div>
+          </div>
+        </div>
+      </main>
+      </div>
+  </body>
+</html>

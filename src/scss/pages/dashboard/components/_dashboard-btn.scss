@@ -1,0 +1,13 @@
+.dashboard-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  border: 2px solid green;
+  border-radius: 5px;
+  text-decoration: none;
+  color: $primary-color;
+  font-size: 4rem;
+  cursor: pointer;
+}
