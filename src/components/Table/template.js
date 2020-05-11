@@ -9,7 +9,12 @@ const getColNames = () => {
   )
 }
 
-const getCol = (content) => `<div class="table__col-info">${content}</div>`
+const getCol = (content) => `
+  <div class="table__col-info">
+    <span>${content}</span>
+    <span data-resize="col" class="table__col-resize"></span>
+  </div>
+`
 
 const getCell = () => `<div class="table__cell" contenteditable></div>`
 
@@ -17,10 +22,15 @@ const getCols = () => getColNames().map(getCol)
 
 const getCells = () => getColNames().map((_, index) => getCell())
 
-const getRowInfo = (info) => `<div class="table__row-info">${info}</div>`
+const getRowInfo = (info) => `
+  <div class="table__row-info">
+    <span>${info}</span>
+    <span data-resize="row" class="table__row-resize"></span>
+  </div>
+`
 
 const getRowData = (cells) => `
-<div class="table__row-data">
+<div data-element="row" class="table__row-data">
   ${cells.join('')}
 </div>
 `

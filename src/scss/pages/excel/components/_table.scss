@@ -11,6 +11,16 @@
   text-align: center;
 }
 
+%resize {
+  position: absolute;
+  opacity: 0;
+  background-color: $selected-color;
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
 .table {
   overflow-x: auto;
   padding-bottom: 2px;
@@ -23,12 +33,32 @@
 
   &__row-info {
     @extend %cell, %info;
+    position: relative;
     flex-basis: $num-cell-width;
   }
 
   &__col-info {
     @extend %cell, %info;
+    position: relative;
     text-align: center;
+  }
+
+  &__col-resize {
+    @extend %resize;
+    top: 0;
+    right: -2px;
+    bottom: 0;
+    width: 4px;
+    cursor: col-resize;
+  }
+
+  .table__row:not(:first-child) &__row-resize {
+    @extend %resize;
+    bottom: -2px;
+    right: 0;
+    left: 0;
+    height: 4px;
+    cursor: row-resize;
   }
 
   &__cell {
