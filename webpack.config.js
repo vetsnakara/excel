@@ -73,6 +73,7 @@ let config = {
     extensions: ['.js'],
     alias: {
       '@': path.resolve(__dirname, 'src'),
+      '@components': path.resolve(__dirname, 'src/components'),
       '@core': path.resolve(__dirname, 'src/core')
     }
   },
