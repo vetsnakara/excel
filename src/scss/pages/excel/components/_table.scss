@@ -1,7 +1,7 @@
 %cell {
   padding: 2px 4px;
   flex-shrink: 0;
-  flex-basis: $cell-init-width;
+  width: $cell-init-width;
   border-right: 1px solid $border-color;
   border-bottom: 1px solid $border-color;
 }
@@ -9,10 +9,12 @@
 %info {
   background-color: $cell-info-bg-color;
   text-align: center;
+  user-select: none;
 }
 
 %resize {
   position: absolute;
+  z-index: 100;
   opacity: 0;
   background-color: $selected-color;
 
@@ -22,6 +24,8 @@
 }
 
 .table {
+  height: 0;
+  flex-grow: 1;
   overflow-x: auto;
   padding-bottom: 2px;
   font-size: 0.9rem;
@@ -50,6 +54,11 @@
     bottom: 0;
     width: 4px;
     cursor: col-resize;
+
+    &:active {
+      bottom: -5000px;
+      opacity: 0.6;
+    }
   }
 
   .table__row:not(:first-child) &__row-resize {
@@ -59,6 +68,11 @@
     left: 0;
     height: 4px;
     cursor: row-resize;
+
+    &:active {
+      right: -5000px;
+      opacity: 0.6;
+    }
   }
 
   &__cell {

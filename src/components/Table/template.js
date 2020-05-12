@@ -9,18 +9,19 @@ const getColNames = () => {
   )
 }
 
-const getCol = (content) => `
-  <div class="table__col-info">
+const getCol = (content, col) => `
+  <div data-col="${col}" class="table__col-info">
     <span>${content}</span>
     <span data-resize="col" class="table__col-resize"></span>
   </div>
 `
 
-const getCell = () => `<div class="table__cell" contenteditable></div>`
+const getCell = (_, col) =>
+  `<div data-col="${col}" class="table__cell" contenteditable></div>`
 
 const getCols = () => getColNames().map(getCol)
 
-const getCells = () => getColNames().map((_, index) => getCell())
+const getCells = () => getColNames().map(getCell)
 
 const getRowInfo = (info) => `
   <div class="table__row-info">
@@ -30,16 +31,16 @@ const getRowInfo = (info) => `
 `
 
 const getRowData = (cells) => `
-<div data-element="row" class="table__row-data">
+<div class="table__row-data">
   ${cells.join('')}
 </div>
 `
 
-const getRow = (info, cells) => {
-  const rowContent = [getRowInfo(info), getRowData(cells)]
+const getRow = (index, cells) => {
+  const rowContent = [getRowInfo(index), getRowData(cells)]
 
   return `
-    <div class="table__row">${rowContent.join('')}</div>
+    <div data-row="${index}" class="table__row">${rowContent.join('')}</div>
   `
 }
 
@@ -59,9 +60,7 @@ export const getTable = () => {
   const dataRows = getDataRows()
 
   return `
-    <div class="table">
-      ${firstRow}
-      ${dataRows.join('')}
-    </div>
+    ${firstRow}
+    ${dataRows.join('')}
   `
 }
