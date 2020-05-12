@@ -34,6 +34,29 @@ class Dom {
   off(event, listener) {
     this.$el.removeEventListener(event, listener)
   }
+
+  get data() {
+    return this.$el.dataset
+  }
+
+  closest(selector) {
+    const domElement = this.$el.closest(selector)
+    return $(domElement)
+  }
+
+  findAll(selector) {
+    return Array.from(this.$el.querySelectorAll(selector)).map($)
+  }
+
+  css(property) {
+    if (typeof property === 'object') {
+      Object.entries(property).forEach(
+        ([name, value]) => (this.$el.style[name] = value)
+      )
+    }
+
+    return getComputedStyle(this.$el)[property]
+  }
 }
 
 export function $(selector) {

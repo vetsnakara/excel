@@ -1,8 +1,8 @@
 import { $ } from '@core/dom'
 
-import { Excel } from '@components/excel'
+import { Excel } from '@components/Excel'
 
-import { Topbar } from '@components/topbar'
+import { Topbar } from '@components/Topbar'
 import { Formula } from '@components/Formula'
 import { Toolbar } from '@components/Toolbar'
 import { Table } from '@components/Table'
