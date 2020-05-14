@@ -9,6 +9,7 @@ export class Component extends DomListener {
   constructor() {
     super()
     this.createRoot()
+    this.prepare()
   }
 
   createRoot() {
@@ -19,12 +20,14 @@ export class Component extends DomListener {
 
     // create root DOM node
     this.$root = $.create(elementName, className)
+    this.$root.html(this.toHTML())
   }
 
   getRoot() {
-    this.$root.html(this.toHTML())
     return this.$root
   }
+
+  prepare() {}
 
   init() {
     this.initDomListeners()

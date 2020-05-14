@@ -10,23 +10,42 @@ const getColNames = () => {
 }
 
 const getCol = (content, col) => `
-  <div data-col="${col}" class="table__col-info">
+  <div
+    data-col="${col}"
+    class="table__col-info"
+  >
     <span>${content}</span>
-    <span data-resize="col" class="table__col-resize"></span>
+    <span
+      data-resize="col" 
+      class="table__col-resize"
+    ></span>
   </div>
 `
 
-const getCell = (_, col) =>
-  `<div data-col="${col}" class="table__cell" contenteditable></div>`
+const getCell = (row) => (_, col) => {
+  const cellId = `${row}:${col}`
+
+  return `
+    <div
+      data-type="cell"
+      data-col="${col}"
+      data-id="${cellId}"
+      class="table__cell"
+      contenteditable
+    ></div>`
+}
 
 const getCols = () => getColNames().map(getCol)
 
-const getCells = () => getColNames().map(getCell)
+const getCells = (row) => getColNames().map(getCell(row))
 
 const getRowInfo = (info) => `
   <div class="table__row-info">
     <span>${info}</span>
-    <span data-resize="row" class="table__row-resize"></span>
+    <span
+      data-resize="row"
+      class="table__row-resize"
+    ></span>
   </div>
 `
 
@@ -36,23 +55,28 @@ const getRowData = (cells) => `
 </div>
 `
 
-const getRow = (index, cells) => {
-  const rowContent = [getRowInfo(index), getRowData(cells)]
+const getRow = (rowIndex, cells) => {
+  const rowInfoContent = rowIndex === null ? '' : rowIndex + 1
+  const rowContent = [getRowInfo(rowInfoContent), getRowData(cells)]
 
   return `
-    <div data-row="${index}" class="table__row">${rowContent.join('')}</div>
+    <div
+      data-row="${rowIndex}"
+      class="table__row">
+        ${rowContent.join('')}
+      </div>
   `
 }
 
 const getFirstRow = () => {
   const cols = getCols()
-  return getRow('', cols)
+  return getRow(null, cols)
 }
 
 const getDataRows = () =>
-  Array.from({ length: ROWS }).map((_, index) => {
-    const cells = getCells()
-    return getRow(index + 1, cells)
+  Array.from({ length: ROWS }).map((_, row) => {
+    const cells = getCells(row)
+    return getRow(row, cells)
   })
 
 export const getTable = () => {
