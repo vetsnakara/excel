@@ -84,6 +84,10 @@
     border-color: rgba($border-color, 0.5);
 
     &--selected {
+      background-color: rgba($selected-color, 0.1);
+    }
+
+    &--current {
       outline: 3px solid $selected-color;
       z-index: 100;
     }

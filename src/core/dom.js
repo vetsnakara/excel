@@ -57,13 +57,13 @@ class Dom {
     return this
   }
 
-  addClass(className) {
-    this.$el.classList.add(className)
+  addClass(...classNames) {
+    classNames.forEach((name) => this.$el.classList.add(name))
     return this
   }
 
-  removeClass(className) {
-    this.$el.classList.remove(className)
+  removeClass(...classNames) {
+    classNames.forEach((name) => this.$el.classList.remove(name))
     return this
   }
 

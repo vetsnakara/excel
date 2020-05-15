@@ -9,8 +9,8 @@ export class Table extends Component {
   static className = 'table'
 
   onKeydown(event) {
-    if (shouldSelect(event)) {
-      this.selectionManager.selectNext(event)
+    if (shouldSelect('keys', event)) {
+      this.selectionManager.handle('keys', event)
     }
   }
 
@@ -19,19 +19,20 @@ export class Table extends Component {
       this.resizeManager.initResize(this.$root, event)
     }
 
-    if (shouldSelect(event)) {
-      this.selectionManager.selectOther(event)
+    if (shouldSelect('click', event)) {
+      this.selectionManager.handle('click', event)
     }
   }
 
-  prepare() {
+  init() {
     this.initResize()
     this.initSelection()
+    this.$root.focus()
   }
 
   initSelection() {
     this.selectionManager = new SelectionManager(this.$root)
-    this.selectionManager.select({ row: 0, col: 0 })
+    // this.selectionManager.setCurrentCell({ row: 0, col: 0 })
   }
 
   initResize() {
@@ -43,13 +44,18 @@ export class Table extends Component {
   }
 }
 
-function shouldResize(event) {
-  const $target = $(event.target)
+function shouldResize({ target }) {
+  const $target = $(target)
   return $target.data.resize
 }
 
-function shouldSelect(event) {
-  const mouseSelect = $(event.target).data.type === 'cell'
-  const keySelect = Object.values(KEY_CODES).includes(event.keyCode)
-  return mouseSelect || keySelect
+function shouldSelect(type, { target, keyCode }) {
+  switch (type) {
+    case 'click':
+      return $(target).data.type === 'cell'
+    case 'keys':
+      return Object.values(KEY_CODES).includes(keyCode)
+    default:
+      return false
+  }
 }
