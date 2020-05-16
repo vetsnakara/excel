@@ -19,9 +19,17 @@ export class Table extends Component {
     this.$emit('cell:input', event.target.textContent)
   }
 
-  onMousedown(event) {
-    if (shouldResize(event)) {
-      this.resizeManager.initResize(this.$root, event)
+  async onMousedown(event) {
+    try {
+      if (shouldResize(event)) {
+        const result = await this.resizeManager.startResize(this.$root, event)
+        const { type, ...data } = result
+        const actionType = type === 'col' ? 'COL_RESIZE' : 'ROW_RESIZE'
+
+        this.$dispatch({ type: actionType, ...data })
+      }
+    } catch (error) {
+      console.warn(error.message)
     }
 
     if (shouldSelect('click', event)) {
@@ -30,7 +38,6 @@ export class Table extends Component {
   }
 
   onCellSelect(event) {
-    console.log('select')
     this.$emit('cell:select', $(event.target).text())
   }
 
@@ -53,6 +60,8 @@ export class Table extends Component {
       const currentCell = this.selectionManager.getCurrentCell()
       currentCell.focus()
     })
+
+    this.$subscribe((state) => console.log('table', state))
   }
 
   toHTML() {

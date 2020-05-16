@@ -2,12 +2,14 @@ import { $ } from '@core/dom'
 import { Emitter } from '@core/Emitter'
 
 export class Excel {
-  constructor($app, element) {
+  constructor($app, element, store) {
     this.$app = $app
     this.element = element
     this.componentOptions = {
-      emitter: new Emitter()
+      emitter: new Emitter(),
+      store
     }
+    this.components = []
   }
 
   getRoot(element) {
@@ -29,6 +31,8 @@ export class Excel {
         const component = new Component(this.componentOptions)
         component.init()
 
+        this.components.push(component)
+
         $element = component.getRoot()
       }
 
@@ -39,7 +43,9 @@ export class Excel {
     return $root
   }
 
-  destroy() {}
+  destroy() {
+    this.components.forEach((component) => component.destroy())
+  }
 
   render() {
     const $root = this.getRoot(this.element)

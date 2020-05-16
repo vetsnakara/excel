@@ -2,13 +2,18 @@ import { $ } from '@core/dom'
 import { DomListener } from '@core/DomListener'
 
 export class Component extends DomListener {
-  constructor({ emitter = null } = {}) {
+  constructor({ emitter = null, store } = {}) {
     super()
 
     this.createRoot()
 
+    // emitter
     this.unsubscribers = []
     this.emitter = emitter
+
+    // store
+    this.storeUnsubscribers = []
+    this.store = store
   }
 
   $on(eventName, listener) {
@@ -20,9 +25,23 @@ export class Component extends DomListener {
     this.emitter.emit(eventName, ...args)
   }
 
+  $dispatch(action) {
+    this.store.dispatch(action)
+  }
+
+  $subscribe(listener) {
+    const unsubscribe = this.store.subscribe(listener)
+    this.storeUnsubscribers.push(unsubscribe)
+  }
+
   unsubscribe() {
+    // emitter
     this.unsubscribers.forEach((unsub) => unsub())
     this.unsubscribers = []
+
+    // store
+    this.storeUnsubscribers.forEach((unsub) => unsub())
+    this.storeUnsubscribers = []
   }
 
   createRoot() {
@@ -45,7 +64,6 @@ export class Component extends DomListener {
   }
 
   destroy() {
-    console.log('component:destroy')
     this.removeDomListeners()
     this.unsubscribe()
   }

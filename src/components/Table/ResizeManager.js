@@ -28,32 +28,39 @@ export class ResizeManager {
     this.$root = $root
   }
 
-  initResize($root, { target, pageX, pageY }) {
-    // resizer element
-    this.resizer = $(target)
+  startResize($root, { target, pageX, pageY }) {
+    return new Promise((resolve) => {
+      // resizer element
+      this.resizer = $(target)
 
-    // type of resize (col/row)
-    this.resizeType = this.resizer.data.resize
+      // type of resize (col/row)
+      this.resizeType = this.resizer.data.resize
 
-    // init cursor coordinates
-    this.cursorInitCoords = {
-      x0: pageX,
-      y0: pageY
-    }
+      // init cursor coordinates
+      this.cursorInitCoords = {
+        x0: pageX,
+        y0: pageY
+      }
 
-    // start listen to mouse move events
-    $root.on('mousemove', this.mouseMoveHanldler)
+      // start listen to mouse move events
+      $root.on('mousemove', this.mouseMoveHanldler)
 
-    // finish listen to mouse move events and do resize
-    $root.on('mouseup', () => {
-      // unsubscribe
-      $root.off('mousemove', this.mouseMoveHanldler)
+      // finish listen to mouse move events and do resize
+      $root.on('mouseup', () => {
+        // unsubscribe
+        $root.off('mousemove', this.mouseMoveHanldler)
 
-      // do resize
-      this.resize()
+        // do resize
+        const result = this.resize()
 
-      // reset
-      this.reset()
+        // reset
+        this.reset()
+
+        resolve({
+          type: this.resizeType,
+          ...result
+        })
+      })
     })
   }
 
@@ -70,18 +77,27 @@ export class ResizeManager {
 
     const { dx } = this.cursorDeltaCoords
 
+    const newWidth = startWidth + dx
+
     cellsToResize.forEach((cell) => {
-      cell.css({ width: `${startWidth + dx}px` })
+      cell.css({ width: `${newWidth}px` })
     })
+
+    return { id: colIndex, value: newWidth }
   }
 
   resizeRow() {
     const rowToResize = this.resizer.closest('[data-row]')
     const startHeight = parseInt(rowToResize.css('height'))
+    const rowIndex = rowToResize.data.row
 
     const { dy } = this.cursorDeltaCoords
 
-    rowToResize.css({ height: `${startHeight + dy}px` })
+    const newHeight = startHeight + dy
+
+    rowToResize.css({ height: `${newHeight}px` })
+
+    return { id: rowIndex, value: newHeight }
   }
 
   updateCursorDelta(x, y) {
@@ -108,9 +124,9 @@ export class ResizeManager {
 
   resize() {
     if (this.resizeType === RESIZE_TYPE_COL) {
-      this.resizeCol()
+      return this.resizeCol()
     } else if (this.resizeType === RESIZE_TYPE_ROW) {
-      this.resizeRow()
+      return this.resizeRow()
     }
   }
 
