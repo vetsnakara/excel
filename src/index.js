@@ -22,7 +22,7 @@ const app = new Excel($app, {
         elementName: 'header',
         className: 'excel__header'
       },
-      components: [Topbar, Formula, Toolbar]
+      components: [Topbar, Toolbar, Formula]
     },
     Table
   ]

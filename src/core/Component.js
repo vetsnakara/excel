@@ -1,17 +1,28 @@
 import { $ } from '@core/dom'
 import { DomListener } from '@core/DomListener'
 
-// 1. create root element
-// 2. init method for component initialization
-//    -  initialization of dom listeners
-
 export class Component extends DomListener {
-  constructor() {
+  constructor({ emitter = null } = {}) {
     super()
 
     this.createRoot()
-    this.initDomListeners()
-    this.init()
+
+    this.unsubscribers = []
+    this.emitter = emitter
+  }
+
+  $on(eventName, listener) {
+    const unsubscribe = this.emitter.subscribe(eventName, listener)
+    this.unsubscribers.push(unsubscribe)
+  }
+
+  $emit(eventName, ...args) {
+    this.emitter.emit(eventName, ...args)
+  }
+
+  unsubscribe() {
+    this.unsubscribers.forEach((unsub) => unsub())
+    this.unsubscribers = []
   }
 
   createRoot() {
@@ -29,6 +40,13 @@ export class Component extends DomListener {
     return this.$root
   }
 
-  // should be implemented by child component
-  init() {}
+  init() {
+    this.initDomListeners()
+  }
+
+  destroy() {
+    console.log('component:destroy')
+    this.removeDomListeners()
+    this.unsubscribe()
+  }
 }
