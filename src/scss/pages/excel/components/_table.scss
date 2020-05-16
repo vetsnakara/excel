@@ -87,7 +87,7 @@
       background-color: rgba($selected-color, 0.1);
     }
 
-    &--current {
+    &--base {
       outline: 3px solid $selected-color;
       z-index: 100;
     }

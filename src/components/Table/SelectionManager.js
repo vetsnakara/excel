@@ -1,9 +1,10 @@
 import { $ } from '@core/dom'
-
-const SELECTED_CLASS_NAME = 'table__cell--selected'
-const CURRENT_CELL_CLASS_NAME = 'table__cell--current'
+import { Cell } from './Cell'
+import { SelectionList } from './SelectionList'
 
 export const KEY_CODES = {
+  ENTER: 13,
+  TAB: 9,
   ARROW_RIGHT: 39,
   ARROW_LEFT: 37,
   ARROW_UP: 38,
@@ -11,136 +12,74 @@ export const KEY_CODES = {
 }
 
 export class SelectionManager {
-  selectMode = null
+  constructor($root, { initCellID = '0:0' } = {}) {
+    this.createCell = (cell) => new Cell(cell, $root)
+    this.selectionList = new SelectionList(this.createCell)
 
-  currentCell = null
-  selectedCells = []
-  currentSelectionCoords = null
-
-  constructor($root) {
-    this.$root = $root
-
-    // set default selection on app load
-    const $cell = this.findCellByCoords(0, 0)
-    this.setNewCurrentCell($cell)
+    this.init(initCellID)
   }
 
-  setNewCurrentCell($cell) {
-    if (this.currentCell) {
-      this.currentCell.removeClass(CURRENT_CELL_CLASS_NAME)
-    }
-
-    this.resetSelectionGroup()
-
-    this.currentCell = $cell
-    this.currentCell.addClass(CURRENT_CELL_CLASS_NAME)
-    this.selectCell($cell)
+  init(initCellID) {
+    const cell = this.createCell(initCellID)
+    this.selectionList.addOne(cell)
   }
 
-  expandSelection($target) {
-    let [basicRow, basicCol] = parseId(this.currentCell.data.id)
-    let [endRow, endCol] = parseId($target.data.id)
+  handle(type, event) {
+    event.preventDefault()
 
-    this.cleanSelectionGroup()
+    const { keyCode, shiftKey, ctrlKey } = event
 
-    if (basicRow > endRow) {
-      ;[endRow, basicRow] = [basicRow, endRow]
-    }
+    if (keyCode === KEY_CODES.ENTER && ctrlKey) return
 
-    if (basicCol > endCol) {
-      ;[endCol, basicCol] = [basicCol, endCol]
-    }
+    const shouldClear = !ctrlKey
+    const shouldExpand = keyCode === KEY_CODES.TAB ? false : shiftKey
 
-    for (let i = basicRow; i <= endRow; i++) {
-      for (let j = basicCol; j <= endCol; j++) {
-        const $cell = this.findCellByCoords(i, j)
-        this.selectCell($cell)
-      }
+    const nextCell = this.getNextCell(type, event)
+
+    if (nextCell) {
+      shouldExpand
+        ? this.selectionList.addGroup(nextCell, { shouldClear })
+        : this.selectionList.addOne(nextCell, { shouldClear })
     }
   }
 
-  handle(type, { target, keyCode, shiftKey, ctrlKey }) {
-    let $target
-
+  getNextCell(type, { target }) {
     if (type === 'click') {
-      $target = $(target)
-      const [row, col] = parseId($target.data.id)
-      this.currentSelectionCoords = { row, col }
-    } else {
-      let { row, col } = this.currentSelectionCoords
+      return this.createCell($(target))
+    } else if (type === 'keys') {
+      const { coords: prevCoords } = this.selectionList.getSelectionCell()
+      const nextCoords = getNextCoords(prevCoords, event)
 
-      switch (keyCode) {
-        case KEY_CODES.ARROW_LEFT:
-          col--
-          break
-        case KEY_CODES.ARROW_RIGHT:
-          col++
-          break
-        case KEY_CODES.ARROW_UP:
-          row--
-          break
-        case KEY_CODES.ARROW_DOWN:
-          row++
-          break
-      }
-      const shouldSelect = row >= 0 && col >= 0
-
-      if (shouldSelect) {
-        $target = this.findCellByCoords(row, col)
-        this.currentSelectionCoords = { row, col }
-      } else {
-        return
+      if (nextCoords) {
+        const { row, col } = nextCoords
+        return this.createCell(`${row}:${col}`)
       }
     }
 
-    // ===========
-
-    if (!ctrlKey) {
-      this.cleanSelection()
-    }
-
-    // set new current selection
-    if (!shiftKey) {
-      this.setNewCurrentCell($target)
-    } /* use shift key */ else {
-      // expand current selection
-      this.expandSelection($target)
-    }
-  }
-
-  selectCell($cell) {
-    $cell.addClass(SELECTED_CLASS_NAME)
-    $cell.selectionGroup = true
-    this.selectedCells.push($cell)
-  }
-
-  cleanSelectionGroup() {
-    this.selectedCells
-      .filter(($c) => $c.selectionGroup)
-      .forEach(($c) => $c.removeClass(SELECTED_CLASS_NAME))
-
-    this.selectedCells = this.selectedCells.filter(($c) => !$c.selectionGroup)
-  }
-
-  resetSelectionGroup() {
-    this.selectedCells
-      .filter(($c) => $c.selectionGroup)
-      .forEach(($c) => ($c.selectionGroup = false))
-  }
-
-  cleanSelection() {
-    this.selectedCells.forEach(($c) => $c.removeClass(SELECTED_CLASS_NAME))
-    this.selectedCells = []
-  }
-
-  findCellByCoords(row, col) {
-    const cellId = `${row}:${col}`
-    const selector = `[data-id="${cellId}"]`
-    const $cell = this.$root.find(selector)
-    return $cell
+    return null
   }
 }
 
-function parseId(id) {
-  return id.split(':').map(Number)
+function getNextCoords(prevCoords, event) {
+  let { row, col } = prevCoords
+  const { keyCode, shiftKey } = event
+
+  if (
+    keyCode === KEY_CODES.ARROW_LEFT ||
+    (keyCode === KEY_CODES.TAB && shiftKey)
+  ) {
+    col--
+  } else if (keyCode === KEY_CODES.ARROW_RIGHT || keyCode === KEY_CODES.TAB) {
+    col++
+  } else if (keyCode === KEY_CODES.ARROW_UP) {
+    row--
+  } else if (keyCode === KEY_CODES.ARROW_DOWN || keyCode === KEY_CODES.ENTER) {
+    row++
+  }
+
+  // check for borders intersection
+  // todo: check max values
+  if (row < 0 || col < 0) return null
+
+  return { row, col }
 }

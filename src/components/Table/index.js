@@ -25,17 +25,7 @@ export class Table extends Component {
   }
 
   init() {
-    this.initResize()
-    this.initSelection()
-    this.$root.focus()
-  }
-
-  initSelection() {
     this.selectionManager = new SelectionManager(this.$root)
-    // this.selectionManager.setCurrentCell({ row: 0, col: 0 })
-  }
-
-  initResize() {
     this.resizeManager = new ResizeManager(this.$root)
   }
 
