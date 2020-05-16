@@ -23,7 +23,6 @@ export class Excel {
         $element = this.getRoot(Component)
       } else {
         const component = new Component()
-        component.init()
         $element = component.getRoot()
       }
 

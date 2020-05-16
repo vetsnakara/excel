@@ -35,19 +35,16 @@ export class ResizeManager {
     // type of resize (col/row)
     this.resizeType = this.resizer.data.resize
 
+    // init cursor coordinates
     this.cursorInitCoords = {
       x0: pageX,
       y0: pageY
     }
 
-    if (this.resizeType === RESIZE_TYPE_COL) {
-      this.colToResize = this.resizer.closest('[data-col]')
-    }
-
-    // listen for mouse move
+    // start listen to mouse move events
     $root.on('mousemove', this.mouseMoveHanldler)
 
-    // finish listen of move and do resize
+    // finish listen to mouse move events and do resize
     $root.on('mouseup', () => {
       // unsubscribe
       $root.off('mousemove', this.mouseMoveHanldler)
@@ -66,8 +63,9 @@ export class ResizeManager {
   }
 
   resizeCol() {
-    const colIndex = this.colToResize.data.col
-    const startWidth = parseInt(this.colToResize.css('width'))
+    const colToResize = this.resizer.closest('[data-col]')
+    const colIndex = colToResize.data.col
+    const startWidth = parseInt(colToResize.css('width'))
     const cellsToResize = this.$root.findAll(`[data-col="${colIndex}"]`)
 
     const { dx } = this.cursorDeltaCoords

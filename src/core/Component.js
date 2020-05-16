@@ -8,7 +8,10 @@ import { DomListener } from '@core/DomListener'
 export class Component extends DomListener {
   constructor() {
     super()
+
     this.createRoot()
+    this.initDomListeners()
+    this.init()
   }
 
   createRoot() {
@@ -19,14 +22,13 @@ export class Component extends DomListener {
 
     // create root DOM node
     this.$root = $.create(elementName, className)
+    this.$root.html(this.toHTML())
   }
 
   getRoot() {
-    this.$root.html(this.toHTML())
     return this.$root
   }
 
-  init() {
-    this.initDomListeners()
-  }
+  // should be implemented by child component
+  init() {}
 }

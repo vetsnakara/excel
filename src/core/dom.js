@@ -44,8 +44,27 @@ class Dom {
     return $(domElement)
   }
 
+  find(selector) {
+    return $(this.$el.querySelector(selector))
+  }
+
   findAll(selector) {
     return Array.from(this.$el.querySelectorAll(selector)).map($)
+  }
+
+  focus() {
+    this.$el.focus()
+    return this
+  }
+
+  addClass(...classNames) {
+    classNames.forEach((name) => this.$el.classList.add(name))
+    return this
+  }
+
+  removeClass(...classNames) {
+    classNames.forEach((name) => this.$el.classList.remove(name))
+    return this
   }
 
   css(property) {

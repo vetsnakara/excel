@@ -37,6 +37,9 @@
 
   &__row-info {
     @extend %cell, %info;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     position: relative;
     flex-basis: $num-cell-width;
   }
@@ -81,7 +84,12 @@
     border-color: rgba($border-color, 0.5);
 
     &--selected {
+      background-color: rgba($selected-color, 0.1);
+    }
+
+    &--base {
       outline: 3px solid $selected-color;
+      z-index: 100;
     }
   }
 }
