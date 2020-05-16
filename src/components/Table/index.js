@@ -1,9 +1,10 @@
 import { Component } from '@/core/Component'
 import { $ } from '@core/dom'
+import { KEY_CODES } from '@config/keyCodes'
 
 import { getTable } from './template'
 import { ResizeManager } from './ResizeManager'
-import { SelectionManager, KEY_CODES } from './SelectionManager'
+import { SelectionManager } from './SelectionManager'
 
 export class Table extends Component {
   static className = 'table'
@@ -12,6 +13,10 @@ export class Table extends Component {
     if (shouldSelect('keys', event)) {
       this.selectionManager.handle('keys', event)
     }
+  }
+
+  onInput(event) {
+    this.$emit('cell:input', event.target.textContent)
   }
 
   onMousedown(event) {
@@ -24,9 +29,30 @@ export class Table extends Component {
     }
   }
 
+  onCellSelect(event) {
+    console.log('select')
+    this.$emit('cell:select', $(event.target).text())
+  }
+
   init() {
+    super.init()
+
     this.selectionManager = new SelectionManager(this.$root)
     this.resizeManager = new ResizeManager(this.$root)
+
+    this.subscribe()
+  }
+
+  subscribe() {
+    this.$on('formula:input', (formulaText) => {
+      const currentCell = this.selectionManager.getCurrentCell()
+      currentCell.setContent(formulaText)
+    })
+
+    this.$on('formula:done', () => {
+      const currentCell = this.selectionManager.getCurrentCell()
+      currentCell.focus()
+    })
   }
 
   toHTML() {

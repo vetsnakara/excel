@@ -76,6 +76,24 @@ class Dom {
 
     return getComputedStyle(this.$el)[property]
   }
+
+  value(content) {
+    if (content === undefined) return this.$el.value
+
+    this.$el.value = content
+    return this
+  }
+
+  text(content) {
+    if (content === undefined) return this.$el.textContent
+
+    this.$el.textContent = content
+    return this
+  }
+
+  dispatch(event) {
+    this.$el.dispatchEvent(event)
+  }
 }
 
 export function $(selector) {

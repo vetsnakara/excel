@@ -74,7 +74,8 @@ let config = {
     alias: {
       '@': path.resolve(__dirname, 'src'),
       '@components': path.resolve(__dirname, 'src/components'),
-      '@core': path.resolve(__dirname, 'src/core')
+      '@core': path.resolve(__dirname, 'src/core'),
+      '@config': path.resolve(__dirname, 'src/config')
     }
   },
 

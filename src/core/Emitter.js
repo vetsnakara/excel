@@ -5,7 +5,7 @@ export class Emitter {
 
   emit(eventName, ...args) {
     if (this.listeners[eventName]) {
-      this.listeners.forEach((listener) => listener(...args))
+      this.listeners[eventName].forEach((listener) => listener(...args))
     }
   }
 

@@ -70,6 +70,10 @@ export class SelectionList {
       }
     })
   }
+
+  getBaseCell() {
+    return this.list[this.baseId]
+  }
 }
 
 function getRangeIds(from, to) {

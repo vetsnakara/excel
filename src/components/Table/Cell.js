@@ -17,6 +17,7 @@ export class Cell {
 
   focus() {
     this.$element.focus()
+    this.$element.dispatch(new Event('cellselect', { bubbles: true }))
   }
 
   setSelectClass() {
@@ -43,5 +44,13 @@ export class Cell {
   parseId(id) {
     const [row, col] = id.split(':').map(Number)
     return { row, col }
+  }
+
+  setContent(text) {
+    this.$element.text(text)
+  }
+
+  getContent() {
+    return this.$element.text()
   }
 }

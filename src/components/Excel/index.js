@@ -5,7 +5,9 @@ export class Excel {
   constructor($app, element) {
     this.$app = $app
     this.element = element
-    this.emitter = new Emitter()
+    this.componentOptions = {
+      emitter: new Emitter()
+    }
   }
 
   getRoot(element) {
@@ -24,7 +26,9 @@ export class Excel {
       if (typeof Component === 'object') {
         $element = this.getRoot(Component)
       } else {
-        const component = new Component({ emitter: this.emitter })
+        const component = new Component(this.componentOptions)
+        component.init()
+
         $element = component.getRoot()
       }
 
@@ -34,6 +38,8 @@ export class Excel {
 
     return $root
   }
+
+  destroy() {}
 
   render() {
     const $root = this.getRoot(this.element)

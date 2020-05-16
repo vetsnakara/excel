@@ -1,7 +1,22 @@
+import { KEY_CODES } from '@config/keyCodes'
+
 import { Component } from '@/core/Component'
 
 export class Formula extends Component {
   static className = 'formula'
+
+  constructor(options) {
+    super(options)
+
+    this.setInputValue = this.setInputValue.bind(this)
+
+    this.input = this.$root.find('input')
+  }
+
+  init() {
+    super.init()
+    this.subscribe()
+  }
 
   toHTML() {
     return `
@@ -12,15 +27,23 @@ export class Formula extends Component {
     `
   }
 
-  onChange(event) {
-    console.log('change', event.target)
-  }
-
-  onClick(event) {
-    console.log('click: ', event.target)
-  }
-
   onInput(event) {
-    console.log('inopt:', event.target)
+    this.$emit('formula:input', event.target.value)
+  }
+
+  onKeydown(event) {
+    if (event.keyCode === KEY_CODES.ENTER) {
+      event.preventDefault()
+      this.$emit('formula:done')
+    }
+  }
+
+  setInputValue(value) {
+    this.input.value(value)
+  }
+
+  subscribe() {
+    this.$on('cell:input', this.setInputValue)
+    this.$on('cell:select', this.setInputValue)
   }
 }
