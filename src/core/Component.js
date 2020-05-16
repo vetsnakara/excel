@@ -6,12 +6,17 @@ import { DomListener } from '@core/DomListener'
 //    -  initialization of dom listeners
 
 export class Component extends DomListener {
-  constructor() {
+  constructor({ emitter = null } = {}) {
     super()
 
     this.createRoot()
     this.initDomListeners()
+
     this.init()
+
+    console.log('emitter:', emitter)
+
+    this.emitter = emitter
   }
 
   createRoot() {

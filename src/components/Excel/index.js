@@ -1,9 +1,11 @@
 import { $ } from '@core/dom'
+import { Emitter } from '@core/Emitter'
 
 export class Excel {
   constructor($app, element) {
     this.$app = $app
     this.element = element
+    this.emitter = new Emitter()
   }
 
   getRoot(element) {
@@ -22,7 +24,7 @@ export class Excel {
       if (typeof Component === 'object') {
         $element = this.getRoot(Component)
       } else {
-        const component = new Component()
+        const component = new Component({ emitter: this.emitter })
         $element = component.getRoot()
       }
 
