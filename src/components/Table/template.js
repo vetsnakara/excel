@@ -41,8 +41,11 @@ const getCol = (content, col) => {
 
 const getCell = (row) => (_, col) => {
   const cellId = `${row}:${col}`
-  const { colState } = storeContext.getValue()
+  const { colState, tableData } = storeContext.getValue()
   const widthStyle = getWidthStyle(col, colState)
+
+  const cell = tableData[cellId]
+  const content = cell ? cell.content : ''
 
   return `
     <div
@@ -52,7 +55,7 @@ const getCell = (row) => (_, col) => {
       class="table__cell"
       ${widthStyle}
       contenteditable
-    ></div>`
+    >${content}</div>`
 }
 
 const getCols = () => getColNames().map(getCol)

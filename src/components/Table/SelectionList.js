@@ -10,6 +10,8 @@ export class SelectionList {
   }
 
   addOne(cell, { shouldClear = false } = {}) {
+    this.list[cell.id] = cell
+
     if (this.list[this.baseId]) {
       this.list[this.baseId].removeBaseClass()
     }
@@ -20,8 +22,6 @@ export class SelectionList {
     cell.setBaseClass()
     cell.setSelectClass()
     cell.focus()
-
-    this.list[cell.id] = cell
 
     if (shouldClear) {
       this.clear()

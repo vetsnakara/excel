@@ -6,7 +6,11 @@ import { getTable } from './template'
 import { ResizeManager } from './ResizeManager'
 import { SelectionManager } from './SelectionManager'
 
-import { tableResize } from '@/redux/actions'
+import {
+  tableResize,
+  changeActiveCell,
+  changeCellContent
+} from '@/redux/actions'
 
 export class Table extends Component {
   static className = 'table'
@@ -18,7 +22,8 @@ export class Table extends Component {
   }
 
   onInput(event) {
-    this.$emit('cell:input', event.target.textContent)
+    const cellText = event.target.textContent
+    this.$dispatch(changeCellContent(cellText))
   }
 
   async onMousedown(event) {
@@ -28,34 +33,43 @@ export class Table extends Component {
         const { type, ...data } = result
         this.$dispatch(tableResize(type, data))
       }
+
+      if (shouldSelect('click', event)) {
+        this.selectionManager.handle('click', event)
+      }
     } catch (error) {
       console.warn(error.message)
-    }
-
-    if (shouldSelect('click', event)) {
-      this.selectionManager.handle('click', event)
     }
   }
 
   onCellSelect(event) {
-    this.$emit('cell:select', $(event.target).text())
+    const { id } = this.selectionManager.getCurrentCell()
+    this.$dispatch(changeActiveCell(id))
   }
 
   init() {
     super.init()
 
+    const { activeCell } = this.store.getState()
+
     this.selectionManager = new SelectionManager(this.$root)
+    this.selectionManager.init(activeCell)
+
     this.resizeManager = new ResizeManager(this.$root)
 
     this.subscribe()
   }
 
   subscribe() {
-    this.$on('formula:input', (formulaText) => {
+    // store subscriptions
+    this.$subscribe(({ activeCell, tableData }) => {
+      const data = tableData[activeCell]
+      const content = data ? data.content : ''
       const currentCell = this.selectionManager.getCurrentCell()
-      currentCell.setContent(formulaText)
+      currentCell.setContent(content)
     })
 
+    // other subscriptions
     this.$on('formula:done', () => {
       const currentCell = this.selectionManager.getCurrentCell()
       currentCell.focus()

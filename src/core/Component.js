@@ -25,10 +25,12 @@ export class Component extends DomListener {
     this.emitter.emit(eventName, ...args)
   }
 
+  // dispatch action
   $dispatch(action) {
     this.store.dispatch(action)
   }
 
+  // subscribe to store changes
   $subscribe(listener) {
     const unsubscribe = this.store.subscribe(listener)
     this.storeUnsubscribers.push(unsubscribe)

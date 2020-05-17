@@ -4,11 +4,9 @@ import { Cell } from './Cell'
 import { SelectionList } from './SelectionList'
 
 export class SelectionManager {
-  constructor($root, { initCellID = '0:0' } = {}) {
+  constructor($root) {
     this.createCell = (cell) => new Cell(cell, $root)
     this.selectionList = new SelectionList(this.createCell)
-
-    this.init(initCellID)
   }
 
   init(initCellID) {

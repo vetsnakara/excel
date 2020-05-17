@@ -1,6 +1,7 @@
 import { KEY_CODES } from '@config/keyCodes'
 
 import { Component } from '@/core/Component'
+import { changeCellContent } from '@/redux/actions'
 
 export class Formula extends Component {
   static className = 'formula'
@@ -28,7 +29,8 @@ export class Formula extends Component {
   }
 
   onInput(event) {
-    this.$emit('formula:input', event.target.value)
+    const { value } = event.target
+    this.$dispatch(changeCellContent(value))
   }
 
   onKeydown(event) {
@@ -43,7 +45,11 @@ export class Formula extends Component {
   }
 
   subscribe() {
-    this.$on('cell:input', this.setInputValue)
-    this.$on('cell:select', this.setInputValue)
+    // store subscriptions
+    this.$subscribe(({ activeCell, tableData }) => {
+      const activeCellData = tableData[activeCell]
+      const content = activeCellData ? activeCellData.content : ''
+      this.input.value(content)
+    })
   }
 }
