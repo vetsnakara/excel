@@ -9,14 +9,10 @@ export class Formula extends Component {
   constructor(options) {
     super(options)
 
-    this.setInputValue = this.setInputValue.bind(this)
+    this.stateSubscriptions = ['activeCell', 'tableData']
 
     this.input = this.$root.find('input')
-  }
-
-  init() {
-    super.init()
-    this.subscribe()
+    this.setInputValue = this.setInputValue.bind(this)
   }
 
   toHTML() {
@@ -44,12 +40,9 @@ export class Formula extends Component {
     this.input.value(value)
   }
 
-  subscribe() {
-    // store subscriptions
-    this.$subscribe(({ activeCell, tableData }) => {
-      const activeCellData = tableData[activeCell]
-      const content = activeCellData ? activeCellData.content : ''
-      this.input.value(content)
-    })
+  onStateChange(field, { activeCell, tableData }) {
+    const activeCellData = tableData[activeCell]
+    const content = activeCellData ? activeCellData.content : ''
+    this.input.value(content)
   }
 }

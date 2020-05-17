@@ -10,8 +10,8 @@ export class Component extends DomListener {
     this.emitter = emitter
 
     // store
-    this.storeUnsubscribers = []
     this.store = store
+    this.stateSubscriptions = []
 
     this.createRoot()
   }
@@ -25,25 +25,15 @@ export class Component extends DomListener {
     this.emitter.emit(eventName, ...args)
   }
 
-  // dispatch action
   $dispatch(action) {
     this.store.dispatch(action)
   }
 
-  // subscribe to store changes
-  $subscribe(listener) {
-    const unsubscribe = this.store.subscribe(listener)
-    this.storeUnsubscribers.push(unsubscribe)
-  }
+  onStateChange() {}
 
   unsubscribe() {
-    // emitter
     this.unsubscribers.forEach((unsub) => unsub())
     this.unsubscribers = []
-
-    // store
-    this.storeUnsubscribers.forEach((unsub) => unsub())
-    this.storeUnsubscribers = []
   }
 
   createRoot() {
@@ -67,6 +57,5 @@ export class Component extends DomListener {
 
   destroy() {
     this.removeDomListeners()
-    this.unsubscribe()
   }
 }

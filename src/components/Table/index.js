@@ -15,6 +15,12 @@ import {
 export class Table extends Component {
   static className = 'table'
 
+  constructor(options) {
+    super(options)
+
+    this.stateSubscriptions = ['tableData']
+  }
+
   onKeydown(event) {
     if (shouldSelect('keys', event)) {
       this.selectionManager.handle('keys', event)
@@ -61,19 +67,17 @@ export class Table extends Component {
   }
 
   subscribe() {
-    // store subscriptions
-    this.$subscribe(({ activeCell, tableData }) => {
-      const data = tableData[activeCell]
-      const content = data ? data.content : ''
-      const currentCell = this.selectionManager.getCurrentCell()
-      currentCell.setContent(content)
-    })
-
-    // other subscriptions
     this.$on('formula:done', () => {
       const currentCell = this.selectionManager.getCurrentCell()
       currentCell.focus()
     })
+  }
+
+  onStateChange(field, { activeCell, tableData }) {
+    const data = tableData[activeCell]
+    const content = data ? data.content : ''
+    const currentCell = this.selectionManager.getCurrentCell()
+    currentCell.setContent(content)
   }
 
   toHTML() {
