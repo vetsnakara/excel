@@ -6,6 +6,8 @@ import { getTable } from './template'
 import { ResizeManager } from './ResizeManager'
 import { SelectionManager } from './SelectionManager'
 
+import { tableResize } from '@/redux/actions'
+
 export class Table extends Component {
   static className = 'table'
 
@@ -24,9 +26,7 @@ export class Table extends Component {
       if (shouldResize(event)) {
         const result = await this.resizeManager.startResize(this.$root, event)
         const { type, ...data } = result
-        const actionType = type === 'col' ? 'COL_RESIZE' : 'ROW_RESIZE'
-
-        this.$dispatch({ type: actionType, ...data })
+        this.$dispatch(tableResize(type, data))
       }
     } catch (error) {
       console.warn(error.message)
@@ -60,12 +60,10 @@ export class Table extends Component {
       const currentCell = this.selectionManager.getCurrentCell()
       currentCell.focus()
     })
-
-    this.$subscribe((state) => console.log('table', state))
   }
 
   toHTML() {
-    return getTable()
+    return getTable(this.store.getState())
   }
 }
 

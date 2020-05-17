@@ -1,22 +1,26 @@
-export function rootReducer(state = {}, action) {
+import { TABLE_RESIZE } from './types'
+
+const initState = {
+  colState: {},
+  rowState: {}
+}
+
+export function rootReducer(state = initState, action) {
   switch (action.type) {
-    case 'COL_RESIZE':
-      return {
-        ...state,
-        colState: {
-          ...state.colState,
-          [action.id]: action.value
-        }
-      }
-    case 'ROW_RESIZE':
-      return {
-        ...state,
-        rowState: {
-          ...state.rowState,
-          [action.id]: action.value
-        }
-      }
+    case TABLE_RESIZE:
+      return handleResize(state, action)
     default:
       return state
+  }
+}
+
+function handleResize(state, action) {
+  const stateType = `${action.resizeType}State`
+  return {
+    ...state,
+    [stateType]: {
+      ...state[stateType],
+      [action.id]: action.value
+    }
   }
 }

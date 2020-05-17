@@ -45,7 +45,5 @@ export class Formula extends Component {
   subscribe() {
     this.$on('cell:input', this.setInputValue)
     this.$on('cell:select', this.setInputValue)
-
-    this.$subscribe((state) => console.log('formula', state))
   }
 }

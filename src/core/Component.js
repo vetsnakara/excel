@@ -5,8 +5,6 @@ export class Component extends DomListener {
   constructor({ emitter = null, store } = {}) {
     super()
 
-    this.createRoot()
-
     // emitter
     this.unsubscribers = []
     this.emitter = emitter
@@ -14,6 +12,8 @@ export class Component extends DomListener {
     // store
     this.storeUnsubscribers = []
     this.store = store
+
+    this.createRoot()
   }
 
   $on(eventName, listener) {

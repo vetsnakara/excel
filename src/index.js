@@ -10,14 +10,18 @@ import { Formula } from '@components/Formula'
 import { Toolbar } from '@components/Toolbar'
 import { Table } from '@components/Table'
 
+import { LS_APP_NAME } from '@/config/constants'
+import { storage } from '@utils/storage'
+
 import './scss/index.scss'
 
-const initState = {
-  colState: {},
-  rowState: {}
-}
+const persistedState = storage(LS_APP_NAME)
 
-const store = createStore(rootReducer, initState)
+const store = persistedState
+  ? createStore(rootReducer, persistedState)
+  : createStore(rootReducer)
+
+store.subscribe((state) => storage(LS_APP_NAME, state))
 
 const $app = $('#app')
 
