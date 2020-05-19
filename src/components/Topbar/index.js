@@ -1,14 +1,18 @@
 import { Component } from '@/core/Component'
 import { getTopbar } from './Topbar.template'
-
 import { KEY_CODES } from '@config/keyCodes'
-
 import { changeTableName } from '@/redux/actions'
+import { debounce } from '@utils/debounce'
 
 export class Topbar extends Component {
   static className = 'topbar'
 
   stateSubscriptions = ['tableName']
+
+  constructor(options) {
+    super(options)
+    this.onInput = debounce(this.onInput, 500)
+  }
 
   onInput({ target: { value } }) {
     this.$dispatch(changeTableName(value))

@@ -12,6 +12,7 @@ import { Table } from '@components/Table'
 
 import { LS_APP_NAME } from '@/config/constants'
 import { storage } from '@utils/storage'
+import { debounce } from '@utils/debounce'
 
 import './scss/index.scss'
 
@@ -21,7 +22,7 @@ const store = persistedState
   ? createStore(rootReducer, persistedState)
   : createStore(rootReducer)
 
-store.subscribe((state) => storage(LS_APP_NAME, state))
+store.subscribe(debounce((state) => storage(LS_APP_NAME, state), 500))
 
 const $app = $('#app')
 
