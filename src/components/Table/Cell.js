@@ -53,4 +53,8 @@ export class Cell {
   getContent() {
     return this.$element.text()
   }
+
+  setStyles(styles) {
+    this.$element.setInlineCSS(styles)
+  }
 }

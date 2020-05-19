@@ -10,6 +10,12 @@ export class SelectionList {
   }
 
   addOne(cell, { shouldClear = false } = {}) {
+    if (shouldClear) {
+      this.clear()
+    }
+
+    this.list[cell.id] = cell
+
     if (this.list[this.baseId]) {
       this.list[this.baseId].removeBaseClass()
     }
@@ -20,12 +26,6 @@ export class SelectionList {
     cell.setBaseClass()
     cell.setSelectClass()
     cell.focus()
-
-    this.list[cell.id] = cell
-
-    if (shouldClear) {
-      this.clear()
-    }
   }
 
   addGroup(selectedCell, { shouldClear = false } = {}) {
@@ -62,7 +62,6 @@ export class SelectionList {
   }
 
   clear({ except = [] } = {}) {
-    except = [this.baseId, ...except]
     Object.values(this.list).forEach(($cell) => {
       if (!except.includes($cell.id)) {
         $cell.reset()

@@ -1,16 +1,23 @@
 import { $ } from '@core/dom'
 import { Emitter } from '@core/Emitter'
+import { Subscriber } from '@core/Subscriber'
 
 export class Excel {
-  constructor($app, element) {
+  constructor($app, element, store) {
     this.$app = $app
     this.element = element
+
     this.componentOptions = {
-      emitter: new Emitter()
+      emitter: new Emitter(),
+      store
     }
+
+    this.components = []
+
+    this.subscriber = new Subscriber(store)
   }
 
-  getRoot(element) {
+  createRoot(element) {
     const {
       root: { elementName, className },
       components
@@ -24,10 +31,13 @@ export class Excel {
       let $element
 
       if (typeof Component === 'object') {
-        $element = this.getRoot(Component)
+        $element = this.createRoot(Component)
       } else {
         const component = new Component(this.componentOptions)
         component.init()
+
+        this.components.push(component)
+        this.subscriber.add(component)
 
         $element = component.getRoot()
       }
@@ -39,10 +49,14 @@ export class Excel {
     return $root
   }
 
-  destroy() {}
+  destroy() {
+    this.components.forEach((component) => component.destroy())
+    this.subscriber.unsubscribe()
+  }
 
   render() {
-    const $root = this.getRoot(this.element)
+    this.subscriber.subscribe()
+    const $root = this.createRoot(this.element)
     this.$app.append($root)
   }
 }
