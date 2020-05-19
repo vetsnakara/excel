@@ -5,8 +5,8 @@
   position: relative;
   padding: 3px;
   text-align: center;
+  border: none;
   border-radius: 2px;
-  border: 1px solid #333;
   background-color: transparent;
   cursor: pointer;
 
@@ -15,7 +15,10 @@
   }
 
   &:hover {
-    border-color: $primary-color;
+    background-color: rgba(#000, 0.1);
+  }
+
+  &--active {
     color: $primary-color;
   }
 }

@@ -11,7 +11,6 @@ export class Formula extends Component {
 
     this.stateSubscriptions = ['activeCell', 'tableData']
 
-    this.input = this.$root.find('input')
     this.setInputValue = this.setInputValue.bind(this)
   }
 
@@ -44,5 +43,10 @@ export class Formula extends Component {
     const activeCellData = tableData[activeCell]
     const content = activeCellData ? activeCellData.content : ''
     this.input.value(content)
+  }
+
+  init() {
+    super.init()
+    this.input = this.$root.find('input')
   }
 }

@@ -12,8 +12,6 @@ export class Component extends DomListener {
     // store
     this.store = store
     this.stateSubscriptions = []
-
-    this.createRoot()
   }
 
   $on(eventName, listener) {
@@ -52,6 +50,7 @@ export class Component extends DomListener {
   }
 
   init() {
+    this.createRoot()
     this.initDomListeners()
   }
 

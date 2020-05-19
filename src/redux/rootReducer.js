@@ -1,7 +1,16 @@
-import { TABLE_RESIZE, CHANGE_ACTIVE_CELL, CHANGE_CELL_CONTENT } from './types'
+import {
+  TABLE_RESIZE,
+  CHANGE_ACTIVE_CELL,
+  CHANGE_CELL_CONTENT,
+  CHANGE_CELL_FORMAT,
+  CHANGE_TABLE_NAME
+} from './types'
+
+import { DEFAULT_ACTIVE_CELL_ID, DEFAULT_TABLE_NAME } from '@config/constants'
 
 const initState = {
-  activeCell: '1:1',
+  tableName: DEFAULT_TABLE_NAME,
+  activeCell: DEFAULT_ACTIVE_CELL_ID,
   tableData: {},
   colState: {},
   rowState: {}
@@ -15,8 +24,42 @@ export function rootReducer(state = initState, action) {
       return handleChangeActiveCell(state, action)
     case CHANGE_CELL_CONTENT:
       return handleChangeCellContent(state, action)
+    case CHANGE_CELL_FORMAT:
+      return handleChangeCellFormat(state, action)
+    case CHANGE_TABLE_NAME:
+      return handleChangeTableName(state, action)
     default:
       return state
+  }
+}
+
+function handleChangeTableName(state, action) {
+  return {
+    ...state,
+    tableName: action.value
+  }
+}
+
+function handleChangeCellFormat(state, { ids, format }) {
+  const { tableData } = state
+
+  const updatedCells = ids.reduce((cells, id) => {
+    cells = {
+      ...cells,
+      [id]: {
+        ...tableData[id],
+        format
+      }
+    }
+    return cells
+  }, {})
+
+  return {
+    ...state,
+    tableData: {
+      ...state.tableData,
+      ...updatedCells
+    }
   }
 }
 

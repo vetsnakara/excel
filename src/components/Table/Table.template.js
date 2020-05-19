@@ -1,10 +1,11 @@
 import { DEFAULT_ROWS_NUM } from '@/config/constants'
 import { createContext } from '@utils/context'
+import { getStyles } from '@utils/styles'
 
 const storeContext = createContext()
 
 function getWidthStyle(col, state) {
-  return col in state ? `style="width: ${state[col]}px"` : ''
+  return col in state ? `width: ${state[col]}px;` : ''
 }
 
 function getHeightStyle(row, state) {
@@ -22,13 +23,14 @@ const getColNames = () => {
 
 const getCol = (content, col) => {
   const { colState } = storeContext.getValue()
-  const widthStyle = getWidthStyle(col, colState)
+  const inlineStyle = getWidthStyle(col, colState)
 
   return `
     <div
       data-col="${col}"
       class="table__col-info"
-      ${widthStyle}
+      ${inlineStyle ? `style="${inlineStyle}"` : ''}
+
     >
       <span>${content}</span>
       <span
@@ -40,12 +42,24 @@ const getCol = (content, col) => {
 }
 
 const getCell = (row) => (_, col) => {
-  const cellId = `${row}:${col}`
   const { colState, tableData } = storeContext.getValue()
-  const widthStyle = getWidthStyle(col, colState)
+
+  const cellId = `${row}:${col}`
+  const cellData = tableData[cellId] || {}
+  const { format } = cellData
+
+  let inlineStyle = getWidthStyle(col, colState)
+
+  if (format) {
+    const styles = getStyles(format)
+    // DRY !!!
+    Object.entries(styles).forEach(
+      ([name, value]) => (inlineStyle += `${name}:${value};`)
+    )
+  }
 
   const cell = tableData[cellId]
-  const content = cell ? cell.content : ''
+  const content = cell && cell.content ? cell.content : ''
 
   return `
     <div
@@ -53,7 +67,7 @@ const getCell = (row) => (_, col) => {
       data-col="${col}"
       data-id="${cellId}"
       class="table__cell"
-      ${widthStyle}
+      ${inlineStyle ? `style="${inlineStyle}"` : ''}
       contenteditable
     >${content}</div>`
 }

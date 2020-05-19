@@ -41,7 +41,7 @@ class Dom {
 
   closest(selector) {
     const domElement = this.$el.closest(selector)
-    return $(domElement)
+    return domElement ? $(domElement) : null
   }
 
   find(selector) {
@@ -75,6 +75,28 @@ class Dom {
     }
 
     return getComputedStyle(this.$el)[property]
+  }
+
+  setInlineCSS(newStyles = {}) {
+    const { cssText } = this.$el.style
+
+    const prevstyles = cssText
+      .slice(0, cssText.length - 1)
+      .split(';')
+      .reduce((acc, style) => {
+        const [name, value] = style.split(':').map((part) => part.trim())
+        acc[name] = value
+        return acc
+      }, {})
+
+    const updatedStyles = {
+      ...prevstyles,
+      ...newStyles
+    }
+
+    Object.entries(updatedStyles).forEach(
+      ([name, value]) => (this.$el.style[name] = value)
+    )
   }
 
   value(content) {

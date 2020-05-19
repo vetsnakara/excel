@@ -2,14 +2,17 @@ import { Component } from '@/core/Component'
 import { $ } from '@core/dom'
 import { KEY_CODES } from '@config/keyCodes'
 
-import { getTable } from './template'
+import { getTable } from './Table.template'
 import { ResizeManager } from './ResizeManager'
 import { SelectionManager } from './SelectionManager'
+
+import { getStyles } from '@utils/styles'
 
 import {
   tableResize,
   changeActiveCell,
-  changeCellContent
+  changeCellContent,
+  changeCellFormat
 } from '@/redux/actions'
 
 export class Table extends Component {
@@ -71,13 +74,31 @@ export class Table extends Component {
       const currentCell = this.selectionManager.getCurrentCell()
       currentCell.focus()
     })
+
+    this.$on('format:change', (format) => {
+      const selectedIds = Object.keys(this.selectionManager.selectionList.list)
+      this.$dispatch(changeCellFormat(format, selectedIds))
+    })
   }
 
   onStateChange(field, { activeCell, tableData }) {
+    const currentCell = this.selectionManager.getCurrentCell()
+    const selectedCells = this.selectionManager.selectionList.list
+
     const data = tableData[activeCell]
     const content = data ? data.content : ''
-    const currentCell = this.selectionManager.getCurrentCell()
+    const format = data ? data.format : {}
+
+    // set styles
     currentCell.setContent(content)
+
+    // set content
+    Object.values(selectedCells).map((cell) => {
+      if (format) {
+        const styles = getStyles(format)
+        cell.setStyles(styles)
+      }
+    })
   }
 
   toHTML() {
