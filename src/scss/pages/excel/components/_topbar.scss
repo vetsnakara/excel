@@ -3,4 +3,11 @@
   justify-content: space-between;
 
   padding: 8px;
+
+  &__button {
+    color: #333;
+    &:hover {
+      color: $primary-color;
+    }
+  }
 }

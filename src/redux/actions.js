@@ -3,7 +3,8 @@ import {
   CHANGE_ACTIVE_CELL,
   CHANGE_CELL_CONTENT,
   CHANGE_CELL_FORMAT,
-  CHANGE_TABLE_NAME
+  CHANGE_TABLE_NAME,
+  CHANGE_TABLE_DATE
 } from './types'
 
 export function changeTableName(value) {
@@ -40,5 +41,12 @@ export function changeCellFormat(format, ids) {
     type: CHANGE_CELL_FORMAT,
     format,
     ids
+  }
+}
+
+export function changeTableDate(date) {
+  return {
+    type: CHANGE_TABLE_DATE,
+    date
   }
 }
