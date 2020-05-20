@@ -3,13 +3,15 @@ import {
   CHANGE_ACTIVE_CELL,
   CHANGE_CELL_CONTENT,
   CHANGE_CELL_FORMAT,
-  CHANGE_TABLE_NAME
+  CHANGE_TABLE_NAME,
+  CHANGE_TABLE_DATE
 } from './types'
 
 import { DEFAULT_ACTIVE_CELL_ID, DEFAULT_TABLE_NAME } from '@config/constants'
 
 const initState = {
   tableName: DEFAULT_TABLE_NAME,
+  tableDate: null,
   activeCell: DEFAULT_ACTIVE_CELL_ID,
   tableData: {},
   colState: {},
@@ -28,8 +30,17 @@ export function rootReducer(state = initState, action) {
       return handleChangeCellFormat(state, action)
     case CHANGE_TABLE_NAME:
       return handleChangeTableName(state, action)
+    case CHANGE_TABLE_DATE:
+      return handleChangeTableDate(state, action)
     default:
       return state
+  }
+}
+
+function handleChangeTableDate(state, action) {
+  return {
+    ...state,
+    tableDate: action.date
   }
 }
 

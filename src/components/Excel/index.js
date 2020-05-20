@@ -1,10 +1,10 @@
 import { $ } from '@core/dom'
 import { Emitter } from '@core/Emitter'
 import { Subscriber } from '@core/Subscriber'
+import { changeTableDate } from '@/redux/actions'
 
 export class Excel {
-  constructor($app, element, store) {
-    this.$app = $app
+  constructor(element, store) {
     this.element = element
 
     this.componentOptions = {
@@ -15,6 +15,8 @@ export class Excel {
     this.components = []
 
     this.subscriber = new Subscriber(store)
+
+    store.dispatch(changeTableDate(new Date()))
   }
 
   createRoot(element) {
@@ -54,9 +56,8 @@ export class Excel {
     this.subscriber.unsubscribe()
   }
 
-  render() {
+  getRoot() {
     this.subscriber.subscribe()
-    const $root = this.createRoot(this.element)
-    this.$app.append($root)
+    return this.createRoot(this.element)
   }
 }

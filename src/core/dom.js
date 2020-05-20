@@ -5,7 +5,7 @@ class Dom {
   }
 
   html(htmlContent) {
-    if (htmlContent) {
+    if (htmlContent !== undefined) {
       this.$el.innerHTML = htmlContent
       return this
     }

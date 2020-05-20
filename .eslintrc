@@ -8,6 +8,7 @@
   },
   "extends": ["standard", "plugin:prettier/recommended"],
   "rules": {
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "no-new": "off"
   }
 }

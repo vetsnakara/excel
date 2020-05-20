@@ -15,4 +15,10 @@
   &__db {
     padding: 20px 40px;
   }
+
+  &__no-data-msg {
+    text-align: center;
+    color: $primary-color;
+    font-size: 18px;
+  }
 }
