@@ -1,7 +1,6 @@
 export function createStore(reducer, initState) {
   let state = reducer(initState, { type: '@@Redux/INIT' })
-
-  const listeners = []
+  let listeners = []
 
   function getState() {
     return state
@@ -9,7 +8,9 @@ export function createStore(reducer, initState) {
 
   function subscribe(listener) {
     listeners.push(listener)
-    return () => listeners.filter((l) => l !== listener)
+    return () => {
+      listeners = listeners.filter((l) => l !== listener)
+    }
   }
 
   function dispatch(action) {
