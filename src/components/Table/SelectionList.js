@@ -25,7 +25,6 @@ export class SelectionList {
         baseCell.editSuccess()
       }
 
-      baseCell.removeSelectClass()
       baseCell.removeBaseClass()
     }
 
