@@ -4,7 +4,8 @@ import {
   CHANGE_CELL_CONTENT,
   CHANGE_CELL_FORMAT,
   CHANGE_TABLE_NAME,
-  CHANGE_TABLE_DATE
+  CHANGE_TABLE_DATE,
+  REMOVE_CELL_CONTENT
 } from './types'
 
 import { DEFAULT_ACTIVE_CELL_ID, DEFAULT_TABLE_NAME } from '@config/constants'
@@ -26,6 +27,8 @@ export function rootReducer(state = initState, action) {
       return handleChangeActiveCell(state, action)
     case CHANGE_CELL_CONTENT:
       return handleChangeCellContent(state, action)
+    case REMOVE_CELL_CONTENT:
+      return handleRemoveCellContent(state, action)
     case CHANGE_CELL_FORMAT:
       return handleChangeCellFormat(state, action)
     case CHANGE_TABLE_NAME:
@@ -34,6 +37,27 @@ export function rootReducer(state = initState, action) {
       return handleChangeTableDate(state, action)
     default:
       return state
+  }
+}
+
+function handleRemoveCellContent(state, action) {
+  const { tableData } = state
+
+  const updatedCells = action.ids.reduce((acc, id) => {
+    acc[id] = {
+      ...tableData[id],
+      content: '',
+      formula: ''
+    }
+    return acc
+  }, {})
+
+  return {
+    ...state,
+    tableData: {
+      ...tableData,
+      ...updatedCells
+    }
   }
 }
 
@@ -83,7 +107,8 @@ function handleChangeCellContent(state, action) {
       ...state.tableData,
       [id]: {
         ...cell,
-        content: action.content
+        content: action.content,
+        formula: action.formula
       }
     }
   }

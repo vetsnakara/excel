@@ -19,8 +19,6 @@ export class SelectionManager {
 
     const { keyCode, shiftKey, ctrlKey } = event
 
-    if (keyCode === KEY_CODES.ENTER && ctrlKey) return
-
     const shouldClear = !ctrlKey
     const shouldExpand = keyCode === KEY_CODES.TAB ? false : shiftKey
 
@@ -67,7 +65,7 @@ function getNextCoords(prevCoords, event) {
     col++
   } else if (keyCode === KEY_CODES.ARROW_UP) {
     row--
-  } else if (keyCode === KEY_CODES.ARROW_DOWN || keyCode === KEY_CODES.ENTER) {
+  } else if (keyCode === KEY_CODES.ARROW_DOWN) {
     row++
   }
 

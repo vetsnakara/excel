@@ -68,7 +68,7 @@ const getCell = (row) => (_, col) => {
       data-id="${cellId}"
       class="table__cell"
       ${inlineStyle ? `style="${inlineStyle}"` : ''}
-      contenteditable
+      tabindex="0"
     >${content}</div>`
 }
 
