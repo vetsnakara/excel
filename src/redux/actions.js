@@ -4,8 +4,16 @@ import {
   CHANGE_CELL_CONTENT,
   CHANGE_CELL_FORMAT,
   CHANGE_TABLE_NAME,
-  CHANGE_TABLE_DATE
+  CHANGE_TABLE_DATE,
+  REMOVE_CELL_CONTENT
 } from './types'
+
+export function removeCellContent(ids) {
+  return {
+    type: REMOVE_CELL_CONTENT,
+    ids
+  }
+}
 
 export function changeTableName(value) {
   return {
@@ -29,10 +37,11 @@ export function changeActiveCell(cellId) {
   }
 }
 
-export function changeCellContent(content) {
+export function changeCellContent({ formula, content }) {
   return {
     type: CHANGE_CELL_CONTENT,
-    content
+    content,
+    formula
   }
 }
 

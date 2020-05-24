@@ -33,6 +33,8 @@ export class Router {
 
       this.root.html('')
       this.root.append(this.page.getRoot())
+
+      this.page.afterMount()
     }
   }
 

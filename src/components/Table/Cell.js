@@ -15,9 +15,40 @@ export class Cell {
     this.coords = this.parseId(this.id)
   }
 
+  get isEditable() {
+    return this.$element.hasAttribute('contenteditable')
+  }
+
   focus() {
     this.$element.focus()
-    this.$element.dispatch(new Event('cellselect', { bubbles: true }))
+  }
+
+  select() {
+    this.$element.focus()
+    this.trigger(new Event('cellselect', { bubbles: true }))
+  }
+
+  editSuccess() {
+    this.clearEditable()
+    this.trigger(new Event('editsuccess', { bubbles: true }))
+  }
+
+  editStart() {
+    this.trigger(new Event('editstart', { bubbles: true }))
+  }
+
+  trigger(event) {
+    this.$element.trigger(event)
+  }
+
+  setEditable() {
+    this.$element.blur() // !!!
+    this.$element.setAttribute('contenteditable', true)
+    this.$element.focus()
+  }
+
+  clearEditable() {
+    this.$element.removeAttribute('contenteditable')
   }
 
   setSelectClass() {

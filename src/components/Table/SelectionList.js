@@ -9,23 +9,39 @@ export class SelectionList {
     return this.list[this.selectionId]
   }
 
+  getBaseCell() {
+    return this.list[this.baseId]
+  }
+
+  getSelectedCells() {
+    return this.list
+  }
+
   addOne(cell, { shouldClear = false } = {}) {
+    const baseCell = this.getBaseCell()
+
+    if (baseCell) {
+      if (baseCell.isEditable && cell.id !== baseCell.id) {
+        baseCell.editSuccess()
+      }
+
+      baseCell.removeSelectClass()
+      baseCell.removeBaseClass()
+    }
+
     if (shouldClear) {
       this.clear()
     }
 
     this.list[cell.id] = cell
 
-    if (this.list[this.baseId]) {
-      this.list[this.baseId].removeBaseClass()
-    }
-
     this.baseId = cell.id
     this.selectionId = cell.id
 
     cell.setBaseClass()
     cell.setSelectClass()
-    cell.focus()
+
+    cell.select()
   }
 
   addGroup(selectedCell, { shouldClear = false } = {}) {
@@ -68,10 +84,6 @@ export class SelectionList {
         delete this.list[$cell.id]
       }
     })
-  }
-
-  getBaseCell() {
-    return this.list[this.baseId]
   }
 }
 

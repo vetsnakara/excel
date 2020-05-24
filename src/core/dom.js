@@ -57,6 +57,35 @@ class Dom {
     return this
   }
 
+  blur() {
+    this.$el.blur()
+    return this
+  }
+
+  hasFocus() {
+    return this.$el === document.activeElement
+  }
+
+  hasAttribute(name) {
+    return this.$el.hasAttribute(name)
+  }
+
+  setAttribute(name, value) {
+    this.$el.setAttribute(name, value)
+  }
+
+  removeAttribute(name) {
+    this.$el.removeAttribute(name)
+  }
+
+  editable(value) {
+    if (!value) {
+      return this.$el.contentEditable
+    }
+    this.$el.contentEditable = value
+    return this
+  }
+
   addClass(...classNames) {
     classNames.forEach((name) => this.$el.classList.add(name))
     return this
@@ -113,7 +142,7 @@ class Dom {
     return this
   }
 
-  dispatch(event) {
+  trigger(event) {
     this.$el.dispatchEvent(event)
   }
 }

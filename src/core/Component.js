@@ -14,9 +14,14 @@ export class Component extends DomListener {
     this.stateSubscriptions = []
   }
 
-  $on(eventName, listener) {
-    const unsubscribe = this.emitter.subscribe(eventName, listener)
-    this.unsubscribers.push(unsubscribe)
+  $on(eventNames, listener) {
+    if (!Array.isArray(eventNames)) {
+      eventNames = [eventNames]
+    }
+    eventNames.forEach((eventName) => {
+      const unsub = this.emitter.subscribe(eventName, listener)
+      this.unsubscribers.push(unsub)
+    })
   }
 
   $emit(eventName, ...args) {
@@ -54,7 +59,10 @@ export class Component extends DomListener {
     this.initDomListeners()
   }
 
+  afterMount() {}
+
   destroy() {
     this.removeDomListeners()
+    this.unsubscribe()
   }
 }

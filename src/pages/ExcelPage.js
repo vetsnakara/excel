@@ -51,6 +51,10 @@ export class ExcelPage extends Page {
     return this.excel.getRoot()
   }
 
+  afterMount() {
+    this.excel.afterMount()
+  }
+
   destroy() {
     this.unsubscribeFromStore()
     this.excel.destroy()

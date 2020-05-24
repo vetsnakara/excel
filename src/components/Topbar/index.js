@@ -22,6 +22,8 @@ export class Topbar extends Component {
     const $target = $(event.target)
     const $button = $target.closest(`[data-type="button"]`)
 
+    if (!$button) return
+
     if ($button.data.role === 'remove') {
       const decision = confirm('Are you sure?')
       if (decision) {

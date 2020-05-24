@@ -60,4 +60,8 @@ export class Excel {
     this.subscriber.subscribe()
     return this.createRoot(this.element)
   }
+
+  afterMount() {
+    this.components.forEach((component) => component.afterMount())
+  }
 }

@@ -29,21 +29,22 @@ export function getStyles(format) {
   let styles = {}
 
   // get font styles
-  Object.keys(fontStylesMap).forEach((modifier) => {
-    const style = format.font.includes(modifier)
-      ? fontStylesMap[modifier]
-      : fontStylesFallbacks[modifier]
+  if (format) {
+    Object.keys(fontStylesMap).forEach((modifier) => {
+      const style = format.font.includes(modifier)
+        ? fontStylesMap[modifier]
+        : fontStylesFallbacks[modifier]
+
+      styles = {
+        ...styles,
+        ...style
+      }
+    })
 
     styles = {
       ...styles,
-      ...style
+      ...alignStylesMap[format.align]
     }
-  })
-
-  // get align styles
-  styles = {
-    ...styles,
-    ...alignStylesMap[format.align]
   }
 
   return styles

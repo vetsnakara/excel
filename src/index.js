@@ -9,4 +9,6 @@ new Router('#app', {
   excel: ExcelPage
 })
 
-window.location.hash = 'dashboard'
+if (!window.location.hash) {
+  window.location.hash = 'dashboard'
+}

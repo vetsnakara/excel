@@ -1,7 +1,6 @@
 import { KEY_CODES } from '@config/keyCodes'
 
 import { Component } from '@/core/Component'
-import { changeCellContent } from '@/redux/actions'
 
 export class Formula extends Component {
   static className = 'formula'
@@ -9,9 +8,68 @@ export class Formula extends Component {
   constructor(options) {
     super(options)
 
-    this.stateSubscriptions = ['activeCell', 'tableData']
+    this.focusCellId = null
 
     this.setInputValue = this.setInputValue.bind(this)
+    this.handleFocus = this.handleFocus.bind(this)
+  }
+
+  onInput({ target: { value } }) {
+    this.$emit('formula:change', value)
+  }
+
+  onKeydown({ keyCode }) {
+    if (keyCode === KEY_CODES.ESQ) {
+      this.restoreInputValue()
+      this.$emit('formula:cancel')
+    }
+
+    if (keyCode === KEY_CODES.ENTER) {
+      event.preventDefault()
+      this.$emit('formula:done')
+    }
+  }
+
+  setInputValue(value) {
+    this.input.value(value)
+  }
+
+  init() {
+    super.init()
+
+    this.input = this.$root.find('input')
+    this.addInputListeners()
+
+    this.subscribe()
+  }
+
+  handleFocus() {
+    this.$emit('formula:focus')
+  }
+
+  addInputListeners() {
+    this.input.on('focus', this.handleFocus)
+  }
+
+  removeInputListeners() {
+    this.input.off('focus', this.handleFocus)
+  }
+
+  restoreInputValue() {
+    const { activeCell, tableData } = this.store.getState()
+    const cellData = tableData[activeCell]
+    const formula = (cellData && cellData.formula) || ''
+    this.setInputValue(formula)
+  }
+
+  subscribe() {
+    this.$on('content:change', (content) => {
+      this.input.value(content)
+    })
+
+    this.$on('cell:change', () => {
+      this.restoreInputValue()
+    })
   }
 
   toHTML() {
@@ -23,30 +81,8 @@ export class Formula extends Component {
     `
   }
 
-  onInput(event) {
-    const { value } = event.target
-    this.$dispatch(changeCellContent(value))
-  }
-
-  onKeydown(event) {
-    if (event.keyCode === KEY_CODES.ENTER) {
-      event.preventDefault()
-      this.$emit('formula:done')
-    }
-  }
-
-  setInputValue(value) {
-    this.input.value(value)
-  }
-
-  onStateChange(field, { activeCell, tableData }) {
-    const activeCellData = tableData[activeCell]
-    const content = activeCellData ? activeCellData.content : ''
-    this.input.value(content)
-  }
-
-  init() {
-    super.init()
-    this.input = this.$root.find('input')
+  destroy() {
+    super.destroy()
+    this.removeInputListeners()
   }
 }
